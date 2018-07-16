@@ -7,14 +7,11 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.JsonObject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -22,18 +19,20 @@ import javax.ws.rs.core.Response;
  * @mail ricardo.job@ifpb.edu.br
  * @since 16/07/2018, 10:22:33
  */
-@Stateless
-@Path("")
 public class SubResourceProduto {
 
-    @Inject
     private ServiceDeVenda service;
+    private String idDaVenda;
+
+    public SubResourceProduto(ServiceDeVenda service, String idDaVenda) {
+        this.service = service;
+        this.idDaVenda = idDaVenda;
+    }
 
     @GET
-    public Response exibirProduto(
-            @PathParam("id") String idDaVenda) {
+    public Response exibirProduto() {
 
-        Venda venda = service.localizarPorId(idDaVenda);
+        Venda venda = this.service.localizarPorId(this.idDaVenda);
 
         if (venda == null) {
             return Response.noContent().build();
@@ -52,11 +51,10 @@ public class SubResourceProduto {
 
     // ../api/vendas/{id}/produto
     @PUT
-    public Response adicionarProduto(
-            @PathParam("id") String idDaVenda, JsonObject json) {
+    public Response adicionarProduto(JsonObject json) {
 
-        Venda venda = service.novoProduto(
-                idDaVenda,
+        Venda venda = this.service.novoProduto(
+                this.idDaVenda,
                 json.getString("produto"),
                 json.getJsonNumber("preco").doubleValue()
         );

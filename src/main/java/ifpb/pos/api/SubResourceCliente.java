@@ -2,15 +2,10 @@ package ifpb.pos.api;
 
 import ifpb.pos.domain.Venda;
 import ifpb.pos.service.ServiceDeVenda;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.json.JsonObject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -18,20 +13,20 @@ import javax.ws.rs.core.Response;
  * @mail ricardo.job@ifpb.edu.br
  * @since 16/07/2018, 10:22:33
  */
-@Stateless
-//@Path("")
 public class SubResourceCliente {
 
-    @Inject
     private ServiceDeVenda service;
+    private String idDaVenda;
+
+    public SubResourceCliente(ServiceDeVenda service, String idDaVenda) {
+        this.service = service;
+        this.idDaVenda = idDaVenda;
+    }
 
     @GET
-//    @Path("{id}/cliente")
-//    @Produces(MediaType.APPLICATION_JSON)
-    public Response exibirCliente(
-            @PathParam("id") String idDaVenda) {
+    public Response exibirCliente() {
 
-        Venda venda = service.localizarPorId(idDaVenda);
+        Venda venda = this.service.localizarPorId(this.idDaVenda);
 
         if (venda == null) {
             return Response.noContent().build();
@@ -44,13 +39,10 @@ public class SubResourceCliente {
 
     // ../api/vendas/{id}/cliente
     @PUT
-//    @Path("{id}/cliente")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
     public Response atualizarNomeDoCliente(
             @PathParam("id") String idDaVenda, JsonObject json) {
 
-        Venda venda = service.atualizarClienteDaVenda(
+        Venda venda = this.service.atualizarClienteDaVenda(
                 idDaVenda,
                 json.getString("nome")
         );

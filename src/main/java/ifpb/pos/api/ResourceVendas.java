@@ -5,6 +5,9 @@ import ifpb.pos.domain.VendaSimples;
 import ifpb.pos.service.ServiceDeVenda;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
@@ -38,9 +41,7 @@ public class ResourceVendas {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response todas() {
-
         List<Venda> vendas = service.todasAsVendas();
-
         GenericEntity<List<Venda>> entity = new GenericEntity<List<Venda>>(vendas) {
         };
         return Response.ok() //200
@@ -55,18 +56,14 @@ public class ResourceVendas {
     @Produces(MediaType.APPLICATION_JSON)
     public Response vendaPorId(
             @PathParam("id") String id, @Context UriInfo uriInfo) {
-
         Venda venda = service.localizarPorId(id);
-
         if (venda == null) {
             return Response.noContent().build();
         }
         VendaSimples simples = new VendaSimples(venda, uriInfo);
-
         return Response.ok() //200
                 .entity(simples)
                 .build();
-
     }
 
     @GET
@@ -74,54 +71,53 @@ public class ResourceVendas {
     @Produces(MediaType.APPLICATION_JSON)
     public Response finalizarVendaPorId(
             @PathParam("id") String id, @Context UriInfo uriInfo) {
-
         Venda venda = service.finalizarVendaComId(id);
-
         if (venda == null) {
             return Response.noContent().build();
         }
         VendaSimples simples = new VendaSimples(venda, uriInfo);
-
         return Response.ok() //200
                 .entity(simples)
                 .build();
-
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response novaVenda(JsonObject json) {
-
         Venda venda = service.novaVendaParaCliente(
                 json.getString("nome"),
                 json.getString("cpf"),
                 json.getString("email")
         );
-
         if (venda == null) {
             return Response.noContent().build();
         }
-
         return Response.ok() //200
                 .entity(venda)
                 .build();
     }
 
-//    @Path("{id}/cliente")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public SubResourceCliente exibirCliente() {
-//        return this.context
-//                .getResource(SubResourceCliente.class);
-////        return new SubResourceCliente();
-//    }
-    @Path("{id}/produto")
-//    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("{id}/cliente")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public SubResourceProduto exibirProduto() {
+    public SubResourceCliente exibirCliente(
+            @PathParam("id") String id) {
         return this.context
-                .getResource(SubResourceProduto.class);
+                .initResource(new SubResourceCliente(service, id));
+//                .getResource(SubResourceCliente.class);
+//        return new SubResourceCliente();
+    }
+
+    @Path("{id}/produto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+//    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public SubResourceProduto exibirProduto(
+            @PathParam("id") String id) {
+        return this.context
+                //                .getResource(SubResourceProduto.class);
+                .initResource(new SubResourceProduto(service, id));
     }
 
     // ../api/vendas/{id}/cliente
