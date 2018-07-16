@@ -1,5 +1,7 @@
 package ifpb.pos.service;
 
+import ifpb.pos.domain.Cliente;
+import ifpb.pos.domain.Produto;
 import ifpb.pos.domain.Venda;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -21,7 +23,8 @@ public class ServiceDeVenda {
         return em.find(Venda.class, id);
     }
 
-    public Venda novaVendaParaCliente(String cliente) {
+    public Venda novaVendaParaCliente(String nome, String cpf, String email) {
+        Cliente cliente = new Cliente(cpf, email, nome);
         Venda venda = new Venda(cliente);
         em.persist(venda);
         return venda;
@@ -32,21 +35,30 @@ public class ServiceDeVenda {
                 .getResultList();
     }
 
-    public Venda atualizarClienteDaVenda(String idDaVenda, String cliente) {
+    public Venda atualizarClienteDaVenda(String idDaVenda,
+            String nome) {
         Venda venda = localizarPorId(idDaVenda);
-        venda.setCliente(cliente);
+        venda.getCliente().setNome(nome);
         return venda;
     }
 
-    public Venda novoProduto(String idDaVenda, String produto) {
+    public Venda novoProduto(String idDaVenda, String descricao, double preco) {
         Venda venda = localizarPorId(idDaVenda);
+        Produto produto = new Produto(descricao, preco);
+        em.persist(produto);
         venda.novoProduto(produto);
         return venda;
     }
-    public Venda novosProdutos( String idDaVenda,  List<String> produtos) {
+
+    public Venda finalizarVendaComId(String idDaVenda) {
         Venda venda = localizarPorId(idDaVenda);
-        venda.novosProdutos(produtos);
+        venda.finalizar();
         return venda;
     }
+//    public Venda novosProdutos( String idDaVenda,  List<String> produtos) {
+//        Venda venda = localizarPorId(idDaVenda);
+//        venda.novosProdutos(produtos);
+//        return venda;
+//    }
 
 }

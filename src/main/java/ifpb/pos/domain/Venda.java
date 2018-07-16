@@ -7,8 +7,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -22,26 +27,35 @@ public class Venda implements Serializable {
 
     @Id
     private String id;
-    private String cliente;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Cliente cliente;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date criadaEm;
-    private List<String> produtos = new ArrayList<>();
+
+    @ManyToMany
+    private List<Produto> produtos = new ArrayList<>();
+
+    private Status status;
 
     public Venda() {
         this.criadaEm = Date.from(Instant.now());
         this.id = UUID.randomUUID().toString().replaceAll("-", "");
+        this.status = Status.CRIADA;
     }
 
-    public Venda(String cliente) {
+    public Venda(Cliente cliente) {
         this();
         this.cliente = cliente;
 
     }
 
-    public void novoProduto(String produto) {
+    public void novoProduto(Produto produto) {
         this.produtos.add(produto);
     }
-    public void novosProdutos(List<String> produtos) {
-        this.produtos.addAll(produtos);
+
+    public void finalizar() {
+        this.status = Status.FINALIZADA;
     }
 
     public String getId() {
@@ -52,11 +66,11 @@ public class Venda implements Serializable {
         this.id = id;
     }
 
-    public String getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(String cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
@@ -68,11 +82,11 @@ public class Venda implements Serializable {
         this.criadaEm = criadaEm;
     }
 
-    public List<String> getProdutos() {
+    public List<Produto> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(List<String> produtos) {
+    public void setProdutos(List<Produto> produtos) {
         this.produtos = produtos;
     }
 
@@ -113,6 +127,9 @@ public class Venda implements Serializable {
         return true;
     }
 
-    
+}
 
+enum Status {
+    CRIADA,
+    FINALIZADA
 }
