@@ -3,6 +3,7 @@ package ifpb.pos.domain;
 import ifpb.pos.api.Link;
 import ifpb.pos.api.ResourceClientes;
 import ifpb.pos.api.ResourceProdutos;
+import ifpb.pos.api.ResourceVendas;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public class VendaSimples implements Serializable {
     private Date criadaEm;
     private List<Link> produtos = new ArrayList<>();
 
-    private List<Link> operacoes = new ArrayList<>();
+//    private List<Link> operacoes = new ArrayList<>();
+    private Link finalizar;
 
     public VendaSimples() {
     }
@@ -69,7 +71,12 @@ public class VendaSimples implements Serializable {
     }
 
     private void iniciarOperacoes(Venda venda, UriInfo uriInfo) {
-
+        URI build = uriInfo.getBaseUriBuilder() //http://localhost:8080/pos-vendas/api/
+                .path(ResourceVendas.class) //http://localhost:8080/pos-vendas/api/vendas
+                .path(venda.getId())
+                .path("finalizar")
+                .build();
+        this.finalizar = new Link("finalizar", build.toString());
     }
 
     public Link getCliente() {
@@ -102,6 +109,14 @@ public class VendaSimples implements Serializable {
 
     public void setProdutos(List<Link> produtos) {
         this.produtos = produtos;
+    }
+
+    public Link getFinalizar() {
+        return finalizar;
+    }
+
+    public void setFinalizar(Link finalizar) {
+        this.finalizar = finalizar;
     }
 
 }

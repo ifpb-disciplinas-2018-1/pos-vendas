@@ -58,6 +58,9 @@ public class Venda implements Serializable {
         this.status = Status.FINALIZADA;
     }
 
+    public boolean finalizada(){
+        return this.status.equals(Status.FINALIZADA);
+    }
     public String getId() {
         return id;
     }

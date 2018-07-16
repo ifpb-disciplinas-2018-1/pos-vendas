@@ -9,7 +9,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -75,9 +77,13 @@ public class ResourceVendas {
         if (venda == null) {
             return Response.noContent().build();
         }
-        VendaSimples simples = new VendaSimples(venda, uriInfo);
+        boolean finalizada = venda.finalizada();
+        JsonObject resposta = Json.createObjectBuilder()
+                .add("status", finalizada)
+                .build();
+
         return Response.ok() //200
-                .entity(simples)
+                .entity(resposta)
                 .build();
     }
 
@@ -103,135 +109,19 @@ public class ResourceVendas {
     @Produces(MediaType.APPLICATION_JSON)
     public SubResourceCliente exibirCliente(
             @PathParam("id") String id) {
-        return this.context
-                .initResource(new SubResourceCliente(service, id));
-//                .getResource(SubResourceCliente.class);
-//        return new SubResourceCliente();
+        return this.context.initResource(
+                new SubResourceCliente(service, id)
+        );
     }
 
     @Path("{id}/produto")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-//    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public SubResourceProduto exibirProduto(
             @PathParam("id") String id) {
-        return this.context
-                //                .getResource(SubResourceProduto.class);
-                .initResource(new SubResourceProduto(service, id));
+        return this.context.initResource(
+                new SubResourceProduto(service, id)
+        );
     }
 
-    // ../api/vendas/{id}/cliente
-//    @GET
-//    @Path("{id}/cliente")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response exibirCliente(
-//            @PathParam("id") String idDaVenda) {
-//
-//        Venda venda = service.localizarPorId(idDaVenda);
-//
-//        if (venda == null) {
-//            return Response.noContent().build();
-//        }
-//
-//        return Response.ok() //200
-//                .entity(venda.getCliente())
-//                .build();
-//    }
-//
-//    // ../api/vendas/{id}/cliente
-//    @PUT
-//    @Path("{id}/cliente")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response atualizarNomeDoCliente(
-//            @PathParam("id") String idDaVenda, JsonObject json) {
-//
-//        Venda venda = service.atualizarClienteDaVenda(
-//                idDaVenda,
-//                json.getString("nome")
-//        );
-//
-//        if (venda == null) {
-//            return Response.noContent().build();
-//        }
-//
-//        return Response.ok() //200
-//                .entity(venda)
-//                .build();
-//    }
-    // ../api/vendas/{id}/produto
-//    @GET
-//    @Path("{id}/produto")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response exibirProduto(
-//            @PathParam("id") String idDaVenda) {
-//
-//        Venda venda = service.localizarPorId(idDaVenda);
-//
-//        if (venda == null) {
-//            return Response.noContent().build();
-//        }
-//
-//        GenericEntity<List<Produto>> entity
-//                = new GenericEntity<List<Produto>>(
-//                        venda.getProdutos()
-//                ) {
-//        };
-//
-//        return Response.ok() //200
-//                .entity(entity)
-//                .build();
-//    }
-//
-//    // ../api/vendas/{id}/produto
-//    @PUT
-//    @Path("{id}/produto")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response adicionarProduto(
-//            @PathParam("id") String idDaVenda, JsonObject json) {
-//
-//        Venda venda = service.novoProduto(
-//                idDaVenda,
-//                json.getString("produto"),
-//                json.getJsonNumber("preco").doubleValue()
-//        );
-//
-//        if (venda == null) {
-//            return Response.noContent().build();
-//        }
-//
-//        return Response.ok() //200
-//                .entity(venda)
-//                .build();
-//    }
-    // ../api/vendas/{id}/produto
-//    @PUT
-//    @Path("{id}/produtos")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response adicionarDiversosProdutos(
-//            @PathParam("id") String idDaVenda, JsonObject json) {
-//
-//        JsonArray jsonArray = json.getJsonArray("produtos");
-//        List<String> collect = jsonArray
-//                .stream()
-//                .map((JsonValue t) -> (JsonString) t)
-//                .map(c -> c.getChars().toString()) // "oi" -> oi
-//                .collect(Collectors.toList());
-//
-//        Venda venda = service.novosProdutos(idDaVenda, collect);
-//
-//        if (venda == null) {
-//            return Response.noContent().build();
-//        }
-//
-//        return Response.ok() //200
-//                .entity(venda)
-//                .build();
-//    }
 }
-
-//@Context
-//private ResourceContext resourceContext;
-//return resourceContext.getResource(ClienteVendaSubResource.class);
