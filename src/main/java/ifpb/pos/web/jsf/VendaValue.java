@@ -13,6 +13,7 @@ import java.util.List;
 public class VendaValue {
 
     private Link cliente;
+    private Link finalizar;
     private String id;
     private Date criadaEm;
     private List<Link> produtos = new ArrayList<>();
@@ -48,5 +49,14 @@ public class VendaValue {
     public void setProdutos(List<Link> produtos) {
         this.produtos = produtos;
     }
+
+    public Link getFinalizar() {
+        return finalizar;
+    }
+
+    public void setFinalizar(Link finalizar) {
+        this.finalizar = finalizar;
+    }
+    
 
 }

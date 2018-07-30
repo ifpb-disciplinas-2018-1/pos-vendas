@@ -21,14 +21,13 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @Path("clientes")
+@Produces(MediaType.APPLICATION_JSON)
 public class ResourceClientes {
 
     @Inject
     private ServiceDeCliente service;
-    
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response todos() {
 
         List<Cliente> clientes = service.todosOsClientes();
@@ -44,7 +43,6 @@ public class ResourceClientes {
     // ../vendas/1323
     @GET
     @Path("{cpf}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response clientePorCPF(
             @PathParam("cpf") String cpf) {
 

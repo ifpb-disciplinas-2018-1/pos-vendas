@@ -8,7 +8,6 @@
     </h:head>
     <h:body>
         <h:form>
-
             <h:outputLabel for="id" value="Id:" />
             <h:inputText id="id" value="#{controladorDeVenda.id}" />
             <h:commandButton value="pesquisar" action="#{controladorDeVenda.carregar()}"/>
@@ -26,12 +25,9 @@
                     </f:facet>
                     <a  href="#{prod.href}">#{prod.rel}</a>
                 </h:column>
-
-
             </h:dataTable>
-
-
         </h:form>
+        <a  href="#{controladorDeVenda.venda.finalizar.href}">Finalizar</a>
     </h:body>
 </html>
 

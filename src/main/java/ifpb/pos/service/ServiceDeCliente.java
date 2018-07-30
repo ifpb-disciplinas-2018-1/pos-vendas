@@ -1,8 +1,6 @@
 package ifpb.pos.service;
 
 import ifpb.pos.domain.Cliente;
-import ifpb.pos.domain.Produto;
-import ifpb.pos.domain.Venda;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,8 +20,6 @@ public class ServiceDeCliente {
     public Cliente localizarPorCPF(String cpf) {
         return em.find(Cliente.class, cpf);
     }
-
-     
 
     public List<Cliente> todosOsClientes() {
         return em.createQuery("FROM Cliente v", Cliente.class)

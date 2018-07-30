@@ -21,14 +21,13 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @Path("produtos")
+@Produces(MediaType.APPLICATION_JSON)
 public class ResourceProdutos {
 
     @Inject
     private ServiceDeProduto service;
-    
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response todos() {
 
         List<Produto> produtos = service.todosOsProdutos();
@@ -44,9 +43,7 @@ public class ResourceProdutos {
     // ../vendas/1323
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response produtosPorId(
-            @PathParam("id") int id) {
+    public Response produtosPorId(@PathParam("id") int id) {
 
         Produto produto = service.localizarPorId(id);
         if (produto == null) {

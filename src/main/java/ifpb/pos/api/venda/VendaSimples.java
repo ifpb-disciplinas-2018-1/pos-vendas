@@ -1,9 +1,12 @@
-package ifpb.pos.domain;
+package ifpb.pos.api.venda;
 
 import ifpb.pos.api.Link;
 import ifpb.pos.api.ResourceClientes;
 import ifpb.pos.api.ResourceProdutos;
 import ifpb.pos.api.ResourceVendas;
+import ifpb.pos.domain.Cliente;
+import ifpb.pos.domain.Produto;
+import ifpb.pos.domain.Venda;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;

@@ -1,10 +1,5 @@
 package ifpb.pos.web.jsf;
 
-import ifpb.pos.api.Link;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -21,10 +16,11 @@ public class ClienteDeVenda {
     private WebTarget root = client.target(uri);
 
     public VendaValue lerVendaComId(String id) {
-        WebTarget vendaPorId = root.path("{id}").resolveTemplate("id", id);
-        VendaValue get = vendaPorId.request().get(VendaValue.class);
+        WebTarget vendaPorId = root.path("{id}")
+                .resolveTemplate("id", id);
+        VendaValue get = vendaPorId
+                .request()
+                .get(VendaValue.class);
         return get;
     }
 }
-
-

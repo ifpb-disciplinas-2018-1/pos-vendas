@@ -21,8 +21,6 @@ public class ServiceDeProduto {
         return em.find(Produto.class, id);
     }
 
-     
-
     public List<Produto> todosOsProdutos() {
         return em.createQuery("FROM Produto v", Produto.class)
                 .getResultList();

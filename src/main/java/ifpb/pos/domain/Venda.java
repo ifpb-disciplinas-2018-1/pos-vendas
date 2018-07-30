@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import javax.json.JsonValue;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -128,6 +129,10 @@ public class Venda implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public String status() {
+        return status.name();
     }
 
 }
